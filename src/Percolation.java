@@ -1,6 +1,8 @@
 
 import edu.princeton.cs.algs4.QuickUnionUF;
 
+import java.util.Random;
+
 public class Percolation {
     private int[] open;
     private int count;
@@ -29,14 +31,12 @@ public class Percolation {
                 if(isOpen(row+1,col)){
                     quickU.union((row+1)*num+col,row*num+col);
                 }
-             //   return quickU.connected(row*num+col, 0);
             }
             else if (row == num-1){
                 quickU.union(row*num+col,count-1);
                 if(isOpen(row-1,col)){
                     quickU.union(row*num+col, (row-1)*num+col);
                 }
-              //  return quickU.connected(row*num+col, 0);
             }
             else {
                 if (col != 0) {
@@ -93,7 +93,6 @@ public class Percolation {
     }
 
     public static void main(String[] args) {
-        PercolationStats ps = new PercolationStats(10,100);
 
     }
 }
