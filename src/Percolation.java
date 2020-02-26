@@ -21,8 +21,41 @@ public class Percolation {
 
     public void open(int row, int col) {
         validate(row, col);
-        if (isOpen(row, col)){
+        if (!isOpen(row, col)){
+            System.out.printf("(%d,%d) is open",row, col);
             open[row*num+col] = 1;
+            if (row == 0){
+                quickU.union(row*num+col,0);
+                if(isOpen(row+1,col)){
+                    quickU.union((row+1)*num+col,row*num+col);
+                }
+             //   return quickU.connected(row*num+col, 0);
+            }
+            else if (row == num-1){
+                quickU.union(row*num+col,count-1);
+                if(isOpen(row-1,col)){
+                    quickU.union(row*num+col, (row-1)*num+col);
+                }
+              //  return quickU.connected(row*num+col, 0);
+            }
+            else {
+                if (col != 0) {
+                    if (isOpen(row, col - 1)) {
+                        quickU.union(row * num + col, row * num + col - 1);
+                    }
+                }
+                if (col != num - 1) {
+                    if (isOpen(row, col + 1)) {
+                        quickU.union(row * num + col, row * num + col + 1);
+                    }
+                }
+                if (isOpen(row + 1, col)) {
+                    quickU.union(row * num + col, (row + 1) * num + col);
+                }
+                if (isOpen(row - 1, col)) {
+                    quickU.union(row * num + col, (row - 1) * num + col);
+                }
+            }
         }
     }
 
@@ -40,8 +73,8 @@ public class Percolation {
             quickU.union(row*num+col,0);
             if(isOpen(row+1,col)){
                 quickU.union((row+1)*num+col,row*num+col);
-                return quickU.connected(row*num+col, 0);
             }
+            return quickU.connected(row*num+col, 0);
         }
         if (row == num-1){
             quickU.union(row*num+col,count-1);
@@ -67,6 +100,7 @@ public class Percolation {
         if(isOpen(row-1,col)){
             quickU.union(row*num+col,(row-1)*num+col);
         }
+
         return quickU.connected(row*num+col, 0);
     }
 
@@ -91,6 +125,16 @@ public class Percolation {
     }
 
     public static void main(String[] args) {
+        Percolation p = new Percolation(4);
+        p.open(0,3);
 
+        p.open(1,3);
+        p.open(1,2);
+        p.open(2,2);
+        p.open(3,1);
+        p.open(2,1);
+        //System.out.println( "(2,1) is full is " + p.isFull(2,1) );
+        //System.out.println( "(3,1) is full is " + p.isFull(3,1) );
+        System.out.println( "percolation is " + p.percolate());
     }
 }
