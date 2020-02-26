@@ -69,38 +69,6 @@ public class Percolation {
         if (!isOpen(row, col)){
             return false;
         }
-        if (row == 0){
-            quickU.union(row*num+col,0);
-            if(isOpen(row+1,col)){
-                quickU.union((row+1)*num+col,row*num+col);
-            }
-            return quickU.connected(row*num+col, 0);
-        }
-        if (row == num-1){
-            quickU.union(row*num+col,count-1);
-            if(isOpen(row-1,col)){
-                quickU.union(row*num+col, (row-1)*num+col);
-            }
-            return quickU.connected(row*num+col, 0);
-        }
-
-        if (col != 0){
-            if(isOpen(row,col-1)){
-                quickU.union(row*num+col,row*num+col-1);
-            }
-        }
-        if (col != num-1){
-            if(isOpen(row,col+1)){
-                quickU.union(row*num+col,row*num+col+1);
-            }
-        }
-        if(isOpen(row+1,col)){
-            quickU.union(row*num+col,(row+1)*num+col);
-        }
-        if(isOpen(row-1,col)){
-            quickU.union(row*num+col,(row-1)*num+col);
-        }
-
         return quickU.connected(row*num+col, 0);
     }
 
@@ -125,16 +93,7 @@ public class Percolation {
     }
 
     public static void main(String[] args) {
-        Percolation p = new Percolation(4);
-        p.open(0,3);
+        PercolationStats ps = new PercolationStats(10,100);
 
-        p.open(1,3);
-        p.open(1,2);
-        p.open(2,2);
-        p.open(3,1);
-        p.open(2,1);
-        //System.out.println( "(2,1) is full is " + p.isFull(2,1) );
-        //System.out.println( "(3,1) is full is " + p.isFull(3,1) );
-        System.out.println( "percolation is " + p.percolate());
     }
 }
