@@ -1,4 +1,3 @@
-import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdOut;
 
 import java.util.Iterator;
@@ -7,15 +6,17 @@ import java.util.NoSuchElementException;
 public class Deque<Item> implements Iterable<Item> {
     private Node first = null;
     private Node last = null;
+    private int size;
 
     private class Node {
         Item item;
         Node next;
+        Node before;
     }
 
 
     public Deque() {
-
+        size = 0;
     }
 
     public boolean isEmpty() {
@@ -23,17 +24,18 @@ public class Deque<Item> implements Iterable<Item> {
     }
 
     public int size() {
-        if (isEmpty()) return 0;
-        else if (first.equals(last)) return 1;
-        else {
-            Node temp = first;
-            int i = 2;
-            while (!temp.next.equals(last)) {
-                temp = temp.next;
-                i++;
-            }
-            return i;
-        }
+        // if (isEmpty()) return 0;
+        // else if (first.equals(last)) return 1;
+        // else {
+        //     Node temp = first;
+        //     int i = 2;
+        //     while (!temp.next.equals(last)) {    //循环造成调用时间增长
+        //         temp = temp.next;
+        //         i++;
+        //     }
+        //     return i;
+        // }
+        return size;
     }
 
     public void addLast(Item item) {
@@ -42,8 +44,13 @@ public class Deque<Item> implements Iterable<Item> {
         last = new Node();
         last.item = item;
         last.next = null;
+        last.before = null;
         if (isEmpty()) first = last;
-        else oldLast.next = last;
+        else {
+            oldLast.next = last;
+            last.before = oldLast;
+        }
+        size++;
     }
 
     public void addFirst(Item item) {
@@ -52,8 +59,13 @@ public class Deque<Item> implements Iterable<Item> {
         first = new Node();
         first.item = item;
         first.next = null;
+        first.before = null;
         if (isEmpty()) last = first;
-        else first.next = oldFirst;
+        else {
+            first.next = oldFirst;
+            oldFirst.before = first;
+        }
+        size++;
     }
 
     public Item removeFirst() {
@@ -61,24 +73,34 @@ public class Deque<Item> implements Iterable<Item> {
         Node temp = first;
         first = first.next;
         if (isEmpty()) last = first;
+        else first.before = null;
+        size--;
         return temp.item;
     }
 
     public Item removeLast() {
         if (isEmpty()) throw new NoSuchElementException();
-        Node temp = first;
-        if (first.equals(last)) {
-            last = null;
-            first = null;
-            return temp.item;
-        }
-        while (!temp.next.equals(last)) {
-            temp = temp.next;
-        }
-        Node oldLast = last;
-        last = temp;
-        last.next = null;
-        return oldLast.item;
+        // Node temp = first;
+        // if (first.equals(last)) {
+        //         //     last = null;
+        //         //     first = null;
+        //         //     size--;
+        //         //     return temp.item;
+        //         // }
+        //         // while (!temp.next.equals(last)) {       //循环造成调用时间增长
+        //         //     temp = temp.next;
+        //         // }
+        //         // Node oldLast = last;
+        //         // last = temp;
+        //         // last.next = null;
+        //         // size--;
+        //         // return oldLast.item;
+        Node temp = last;
+        last = last.before;
+        if (isEmpty()) first = last;
+        else last.next = null;
+        size--;
+        return temp.item;
     }
 
     public Iterator<Item> iterator() {
@@ -90,7 +112,7 @@ public class Deque<Item> implements Iterable<Item> {
 
         @Override
         public boolean hasNext() {
-            return current.next != null;
+            return current != null;
         }
 
         public Item next() {
@@ -109,29 +131,40 @@ public class Deque<Item> implements Iterable<Item> {
     }
 
     public static void main(String[] args) {
-        In in = new In(args[0]);
-        Deque<String> deque = new Deque<String>();
-        deque.addFirst(in.readString());
-        deque.addFirst(in.readString());
-        deque.addLast(in.readString());
-        deque.addLast(in.readString());
-        deque.addLast(in.readString());
+
+        Deque<Integer> deque = new Deque<Integer>();
+
+        deque.addLast(1);
+        StdOut.printf(deque.removeFirst() + "\n");
+        // deque.addLast(1);
+        // StdOut.printf(deque.removeLast() + "\n");
+        // deque.addLast(3);
+        // deque.addFirst(4);
+        // deque.removeLast();
+        // deque.addFirst(6);
+        // deque.addFirst(7);
+        // StdOut.printf(deque.size() + "\n");
+        // deque.size();
+        // StdOut.printf(deque.isEmpty() + "\n");
 
         // StdOut.printf("Iterator reads " + deque.iterator().next() + "\n");
         // StdOut.printf("Iterator reads " + deque.iterator().next() + "\n");
         // StdOut.printf("Iterator reads " + deque.iterator().next() + "\n");
         // StdOut.printf("Iterator reads " + deque.iterator().next() + "\n");
-        // StdOut.printf("Iterator reads " + deque.iterator().next() + "\n");
-        Iterator<String> i = deque.iterator();
+        // Iterator<String> i = deque.iterator();
+        //
+        // StdOut.printf("Iterator reads " + i.next() + "\n");
+        // StdOut.printf("Iterator reads " + i.next() + "\n");
+        // StdOut.printf("Iterator reads " + i.next() + "\n");
 
-        while (i.hasNext()) {
-            StdOut.printf("iterator reads : " + i.next() + "\n");
-        }
-        StdOut.printf("remove first: " + deque.removeFirst() + '\n');
-        StdOut.printf("remove first: " + deque.removeFirst() + '\n');
-        StdOut.printf("remove last: " + deque.removeLast() + '\n');
-        StdOut.printf("remove last: " + deque.removeLast() + '\n');
-        StdOut.printf("remove last: " + deque.removeLast() + '\n');
+        // while (i.hasNext()) {
+        //     StdOut.printf("iterator reads : " + i.next() + "\n");
+        // }
+        // StdOut.printf("remove first: " + deque.removeFirst() + '\n');
+        // StdOut.printf("remove first: " + deque.removeFirst() + '\n');
+        // StdOut.printf("remove last: " + deque.removeLast() + '\n');
+        // StdOut.printf("remove last: " + deque.removeLast() + '\n');
+        // StdOut.printf("remove last: " + deque.removeLast() + '\n');
 
 
     }

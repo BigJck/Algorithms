@@ -14,13 +14,13 @@ public class Permutation {
         RandomizedQueue<String> rq = new RandomizedQueue<String>();
         int n = 1;
         if (args.length == 1) n = Integer.parseInt(args[0]);
-        StdOut.println(n);
-        while (StdIn.hasNextChar()) {
+        // StdOut.println(n);
+        while (!StdIn.isEmpty()) {
             rq.enqueue(StdIn.readString());
         }
 
         for (int i = 0; i < n; i++) {
-            StdOut.println(rq.sample());
+            StdOut.println(rq.dequeue());
         }
 
     }
